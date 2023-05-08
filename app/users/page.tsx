@@ -39,3 +39,17 @@ export default async function Users() {
     );
 
 }
+
+
+export async function generateStaticParams() {
+    const usersData: Promise<User[]> = getAllUsers();
+
+    const users = await usersData;
+
+    // params should be strings :: since our type is number, we need to convert it to string
+    return users.map(user => ({
+        userId: user.id.toString()
+
+    }))
+
+}
