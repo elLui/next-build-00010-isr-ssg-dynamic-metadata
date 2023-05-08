@@ -15,6 +15,8 @@ export default async function UserPosts({promise}: Props) {
 
             <article key={post.id}>
                 <h3>{post.title}</h3>
+                <br/>
+                <p>{post.id}</p>
                 <p>{post.body}</p>
 
                 <br/>
