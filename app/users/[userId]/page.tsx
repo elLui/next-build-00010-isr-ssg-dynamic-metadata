@@ -6,7 +6,7 @@ import {Suspense} from "react";
 import {Metadata} from "next";
 
 
-import { notFound } from 'next/navigation';
+import {notFound} from 'next/navigation';
 
 
 type Params = {
@@ -15,17 +15,22 @@ type Params = {
     }
 }
 
-export async function generateMetadata({params: {userId}}: Params) : Promise<Metadata> {
+export async function generateMetadata({params: {userId}}: Params): Promise<Metadata> {
     const userData: Promise<User> = getUser(userId);
     const user: User = await userData;
+
+    if (!user) {
+
+        return {
+            title: "User not found",
+        }
+    }
 
     return {
         title: user.name,
         description: `Posts by: ${user.name}`
     }
 }
-
-
 
 
 export default async function UserPage({params: {userId}}: Params) {
@@ -35,7 +40,6 @@ export default async function UserPage({params: {userId}}: Params) {
     const userPostsData: Promise<Post[]> = getUserPosts(userId);
 
 
-
     // in lieu of Promise.all we have decided to use Suspense boundary to fetch both user and userPosts in parallel -
     // the commented code below is the original code that uses Promise.all and is completely valid -
     // implement Promise.all to fetch both user and userPosts in parallel
@@ -43,6 +47,10 @@ export default async function UserPage({params: {userId}}: Params) {
 
 
     const user = await userData;
+
+    if (!user.name) {
+        return notFound();
+    }
 
 
     return (
